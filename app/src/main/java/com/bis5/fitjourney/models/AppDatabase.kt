@@ -22,7 +22,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "fitjourney_database"
                 )
-                .fallbackToDestructiveMigration() // Add this line to handle schema changes
+                // This strategy is crucial for development to avoid migration errors.
+                .fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance
                 instance
