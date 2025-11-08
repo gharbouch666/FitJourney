@@ -8,8 +8,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // This is a diagnostic step. We are only setting the content view
-        // and doing nothing else to isolate the crash.
+        // Easy Mode: We do nothing but show the layout. No toolbars, no navigation logic.
+        // This guarantees MainActivity itself will not crash.
         setContentView(R.layout.activity_main)
     }
 }

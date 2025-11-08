@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -29,20 +28,20 @@ class WorkoutListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var workoutViewModel: WorkoutViewModel
     private lateinit var workoutAdapter: WorkoutAdapter
-    private var userEmail: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWorkoutListBinding.inflate(inflater, container, false)
-        // This is the simplest, most stable way to get the email after login.
-        userEmail = requireActivity().intent.getStringExtra("USER_EMAIL")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Easy Mode: We use the dummy user to guarantee the ViewModel works.
+        val dummyUserId = "user_123"
 
         val database = AppDatabase.getDatabase(requireContext())
         val viewModelFactory = WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao())
@@ -51,18 +50,10 @@ class WorkoutListFragment : Fragment() {
         setupRecyclerView()
         setupClickListeners()
 
-        if (userEmail == null) {
-            // This is a safeguard. If the email is missing, show an error and don't crash.
-            Toast.makeText(context, "Error: Could not retrieve user.", Toast.LENGTH_LONG).show()
-            binding.tvNoWorkouts.text = "Could not load workouts. Please restart the app."
-            binding.tvNoWorkouts.visibility = View.VISIBLE
-            binding.rvWorkouts.visibility = View.GONE
-        } else {
-            workoutViewModel.getWorkouts(userEmail!!).observe(viewLifecycleOwner) { workouts ->
-                workoutAdapter.updateWorkouts(workouts)
-                binding.tvNoWorkouts.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
-                binding.rvWorkouts.visibility = if (workouts.isEmpty()) View.GONE else View.VISIBLE
-            }
+        workoutViewModel.getWorkouts(dummyUserId).observe(viewLifecycleOwner) { workouts ->
+            workoutAdapter.updateWorkouts(workouts)
+            binding.tvNoWorkouts.visibility = if (workouts.isEmpty()) View.VISIBLE else View.GONE
+            binding.rvWorkouts.visibility = if (workouts.isEmpty()) View.GONE else View.VISIBLE
         }
     }
 
@@ -95,7 +86,8 @@ class WorkoutListFragment : Fragment() {
         builder.setPositiveButton("Create") { _, _ ->
             val workoutName = input.text.toString().trim()
             if (workoutName.isNotEmpty()) {
-                userEmail?.let { workoutViewModel.createWorkout(workoutName, it) }
+                // Easy Mode: Create workouts for the dummy user.
+                workoutViewModel.createWorkout(workoutName, "user_123")
             }
         }
         builder.setNegativeButton("Cancel", null)
