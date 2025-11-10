@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home" 
+        android:title="Home" />
+
+    <item
+        android:id="@+id/workoutListFragment"
+        android:icon="@drawable/dumbell" 
+        android:title="Workouts" />
+
+    <item
+        android:id="@+id/stepCounterFragment"
+        android:icon="@drawable/foot" 
+        android:title="Steps" />
+
+    <item
+        android:id="@+id/nutritionLogFragment"
+        android:icon="@android:drawable/ic_menu_edit" 
+        android:title="Nutrition" />
+
+    <item
+        android:id="@+id/socialFeedFragment"
+        android:icon="@drawable/share" 
+        android:title="Social" />
+
+</menu>

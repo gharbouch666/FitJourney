@@ -5,11 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Workout::class, Exercise::class], version = 2, exportSchema = false)
+@Database(
+    entities = [Workout::class, Exercise::class, WorkoutLog::class, SetLog::class],
+    version = 8,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun workoutDao(): WorkoutDao
     abstract fun exerciseDao(): ExerciseDao
+    abstract fun workoutLogDao(): WorkoutLogDao
+    abstract fun setLogDao(): SetLogDao
 
     companion object {
         @Volatile
@@ -20,9 +26,8 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "fitjourney_database"
+                    "fitjourney_database_v2"
                 )
-                // This strategy is crucial for development to avoid migration errors.
                 .fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance

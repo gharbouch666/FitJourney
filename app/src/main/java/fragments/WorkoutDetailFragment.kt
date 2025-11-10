@@ -9,10 +9,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bis5.fitjourney.R
+import com.bis5.fitjourney.adapters.WorkoutHistoryAdapter
 import com.bis5.fitjourney.databinding.FragmentWorkoutDetailBinding
 import com.bis5.fitjourney.models.AppDatabase
 import com.bis5.fitjourney.models.Exercise
@@ -26,6 +29,7 @@ class WorkoutDetailFragment : Fragment() {
 
     private lateinit var workoutViewModel: WorkoutViewModel
     private lateinit var exerciseAdapter: ExerciseAdapter
+    private lateinit var historyAdapter: WorkoutHistoryAdapter
     private val args: WorkoutDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -39,30 +43,72 @@ class WorkoutDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val navController = findNavController()
+        binding.toolbar.setupWithNavController(navController)
+
         val database = AppDatabase.getDatabase(requireContext())
-        val viewModelFactory = WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao())
+        val viewModelFactory = WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao())
         workoutViewModel = ViewModelProvider(this, viewModelFactory)[WorkoutViewModel::class.java]
 
-        setupRecyclerView()
+        setupRecyclerViews()
 
         workoutViewModel.getWorkout(args.workoutId).observe(viewLifecycleOwner) { workout ->
-            binding.tvWorkoutName.text = workout?.name ?: "Workout Details"
+            binding.toolbar.title = workout?.name ?: "Workout Details"
         }
 
         workoutViewModel.getExercises(args.workoutId).observe(viewLifecycleOwner) { exercises ->
             exerciseAdapter.updateExercises(exercises)
         }
 
+        workoutViewModel.getWorkoutHistory(args.workoutId).observe(viewLifecycleOwner) { history ->
+            historyAdapter.updateLogs(history)
+        }
+
         binding.btnAddExercise.setOnClickListener {
             showAddExerciseDialog()
         }
+
+        binding.btnStartWorkout.setOnClickListener { button ->
+            // Disable the button to prevent multiple clicks and navigation events
+            button.isEnabled = false
+            
+            workoutViewModel.startWorkout(args.workoutId).observe(viewLifecycleOwner) { workoutLogId ->
+                val action = WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToActiveWorkoutFragment(
+                    workoutId = args.workoutId,
+                    workoutLogId = workoutLogId
+                )
+                findNavController().navigate(action)
+            }
+        }
+
+        binding.btnViewProgress.setOnClickListener { 
+            val action = WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToProgressFragment(args.workoutId)
+            findNavController().navigate(action)
+        }
     }
 
-    private fun setupRecyclerView() {
+    override fun onResume() {
+        super.onResume()
+        // Re-enable the button if the user navigates back to this screen
+        binding.btnStartWorkout.isEnabled = true
+    }
+
+    private fun setupRecyclerViews() {
+        // Exercise Adapter
         exerciseAdapter = ExerciseAdapter()
         binding.rvExercises.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = exerciseAdapter
+        }
+
+        // History Adapter
+        historyAdapter = WorkoutHistoryAdapter { workoutLog ->
+            val action = WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToWorkoutSummaryFragment(workoutLog.id)
+            findNavController().navigate(action)
+        }
+        binding.rvHistory.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = historyAdapter
         }
     }
 

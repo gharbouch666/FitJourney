@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- A modern, dark theme color palette for a fitness app -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Primary Colors -->
+    <color name="md_theme_primary">#43D7B6</color> <!-- Accent Green/Teal -->
+    <color name="md_theme_onPrimary">#00382D</color>
+
+    <!-- Surface & Background Colors -->
+    <color name="md_theme_surface">#191C1B</color> <!-- Dark background for surfaces like cards -->
+    <color name="md_theme_onSurface">#E1E3E1</color> <!-- Text on dark background -->
+    <color name="md_theme_surfaceVariant">#3F4946</color> <!-- Slightly lighter variant for contrast -->
+    <color name="md_theme_onSurfaceVariant">#BFC9C5</color>
+    <color name="md_theme_background">#191C1B</color> <!-- Main app background -->
+    <color name="md_theme_onBackground">#E1E3E1</color>
+
+    <!-- Outline/Border Color -->
+    <color name="md_theme_outline">#89938F</color>
+
 </resources>
