@@ -43,6 +43,7 @@
         android:name="com.bis5.fitjourney.fragments.WorkoutListFragment"
         android:label="Your Workouts"
         tools:layout="@layout/fragment_workout_list">
+        <!-- The userEmail argument has been removed -->
         <action
             android:id="@+id/action_workoutListFragment_to_workoutDetailFragment"
             app:destination="@id/workoutDetailFragment" />
@@ -92,6 +93,9 @@
         <argument
             android:name="workoutLogId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_activeWorkoutFragment_to_workoutSummaryFragment"
+            app:destination="@id/workoutSummaryFragment" />
     </fragment>
 
     <fragment
