@@ -1,11 +1,12 @@
-package com.bis5.fitjourney.auth;
+package auth;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+// Since the package is changed, we need to use the full path for the binding class and R class.
+import com.bis5.fitjourney.R;
 import com.bis5.fitjourney.databinding.ActivityRegisterBinding;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -18,57 +19,59 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setupClickListeners();
-    }
-
-    private void setupClickListeners() {
-        // Register button click
-        binding.btnRegister.setOnClickListener(v -> {
-            String fullName = binding.etFullName.getText().toString().trim();
-            String email = binding.etEmail.getText().toString().trim();
-            String password = binding.etPassword.getText().toString().trim();
-            String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
-
-            if (validateInputs(fullName, email, password, confirmPassword)) {
-                // For now, just show success message
-                Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-
-                // Go back to login
-                navigateToLogin();
-            }
-        });
-
-        // Login text click
+        binding.btnBack.setOnClickListener(v -> navigateToLogin());
+        binding.btnRegister.setOnClickListener(v -> registerUser());
         binding.tvLogin.setOnClickListener(v -> navigateToLogin());
     }
 
+    private void registerUser() {
+        String fullName = binding.etFullName.getText().toString().trim();
+        String email = binding.etEmail.getText().toString().trim();
+        String password = binding.etPassword.getText().toString().trim();
+        String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
+
+        if (validateInputs(fullName, email, password, confirmPassword)) {
+            // Add your actual registration logic here
+            Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+            navigateToLogin();
+        }
+    }
+
     private boolean validateInputs(String fullName, String email, String password, String confirmPassword) {
+        boolean isValid = true;
+
         if (fullName.isEmpty()) {
-            binding.etFullName.setError("Full name is required");
-            return false;
+            binding.tilFullName.setError("Full name is required");
+            isValid = false;
+        } else {
+            binding.tilFullName.setError(null);
         }
 
         if (email.isEmpty()) {
-            binding.etEmail.setError("Email is required");
-            return false;
+            binding.tilEmail.setError("Email is required");
+            isValid = false;
+        } else {
+            binding.tilEmail.setError(null);
         }
 
         if (password.isEmpty()) {
-            binding.etPassword.setError("Password is required");
-            return false;
-        }
-
-        if (password.length() < 6) {
-            binding.etPassword.setError("Password must be at least 6 characters");
-            return false;
+            binding.tilPassword.setError("Password is required");
+            isValid = false;
+        } else if (password.length() < 6) {
+            binding.tilPassword.setError("Password must be at least 6 characters");
+            isValid = false;
+        } else {
+            binding.tilPassword.setError(null);
         }
 
         if (!confirmPassword.equals(password)) {
-            binding.etConfirmPassword.setError("Passwords do not match");
-            return false;
+            binding.tilConfirmPassword.setError("Passwords do not match");
+            isValid = false;
+        } else {
+            binding.tilConfirmPassword.setError(null);
         }
 
-        return true;
+        return isValid;
     }
 
     private void navigateToLogin() {

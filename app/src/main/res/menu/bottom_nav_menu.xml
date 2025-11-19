@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/nutritionLogFragment"
-        android:icon="@android:drawable/ic_menu_edit" 
+        android:icon="@drawable/ic_nutrition" 
         android:title="Nutrition" />
 
     <item

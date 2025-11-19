@@ -4,48 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".fragments.WorkoutDetailFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tvExercisesLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Exercises"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExercises"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/tvHistoryLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@+id/tvExercisesLabel"
         tools:listitem="@layout/item_exercise" />
 
     <TextView
         android:id="@+id/tvHistoryLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:text="Recent History"
-        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/rvHistory" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHistory"
         android:layout_width="0dp"
-        android:layout_height="150dp" 
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/btnStartWorkout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -55,33 +53,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintBottom_toBottomOf="@+id/btnStartWorkout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnStartWorkout" />
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btnViewProgress"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="Progress"
-        app:layout_constraintBottom_toBottomOf="@+id/btnStartWorkout"
-        app:layout_constraintEnd_toStartOf="@+id/btnStartWorkout"
+        android:text="View Progress"
+        app:layout_constraintBottom_toBottomOf="@+id/btnAddExercise"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnStartWorkout" />
+        app:layout_constraintTop_toTopOf="@+id/btnAddExercise" />
 
     <Button
         android:id="@+id/btnStartWorkout"
-        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAddExercise"
-        app:layout_constraintStart_toEndOf="@+id/btnViewProgress" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Start Workout"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddExercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

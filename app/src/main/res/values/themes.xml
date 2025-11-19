@@ -15,4 +15,13 @@
     </style>
 
     <style name="Theme.FitJourney" parent="Base.Theme.FitJourney" />
+
+    <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipStrokeColor">@android:color/white</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipIconTint">@color/chip_text_selector</item>
+    </style>
+
 </resources>

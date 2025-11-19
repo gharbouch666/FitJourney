@@ -1,6 +1,7 @@
 package com.bis5.fitjourney.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,25 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
     private ActiveExerciseAdapter exerciseAdapter;
     private String workoutId;
     private String workoutLogId;
+    private long startTime = 0;
+    private Handler timerHandler = new Handler();
+    private Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            int hours = minutes / 60;
+
+            seconds = seconds % 60;
+            minutes = minutes % 60;
+
+            String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            binding.tvWorkoutTimer.setText(time);
+
+            timerHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +66,18 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
         workoutViewModel = new ViewModelProvider(this, viewModelFactory).get(WorkoutViewModel.class);
+
+        // Back button functionality
+        binding.toolbar.setNavigationOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Exit Workout")
+                    .setMessage("Are you sure you want to exit? Your progress will be saved.")
+                    .setPositiveButton("Exit", (dialog, which) -> {
+                        NavHostFragment.findNavController(this).navigateUp();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
 
         setupRecyclerView();
 
@@ -67,6 +99,10 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
                     ActiveWorkoutFragmentDirections.actionActiveWorkoutFragmentToWorkoutSummaryFragment(workoutLogId);
             navController.navigate(action);
         });
+
+        // Start the working timer
+        startTime = System.currentTimeMillis();
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     private void setupRecyclerView() {
@@ -83,6 +119,7 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        timerHandler.removeCallbacks(timerRunnable);
         binding = null;
     }
 }

@@ -9,7 +9,6 @@ import com.bis5.fitjourney.models.SetLogDao;
 import com.bis5.fitjourney.models.WorkoutDao;
 import com.bis5.fitjourney.models.WorkoutLogDao;
 
-// This is the standard, boilerplate, correct way to write a ViewModel Factory in Java.
 public class WorkoutViewModelFactory implements ViewModelProvider.Factory {
 
     private final WorkoutDao workoutDao;
@@ -27,14 +26,9 @@ public class WorkoutViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        // This generic, reflective approach is safer and more standard than a direct cast.
         if (modelClass.isAssignableFrom(WorkoutViewModel.class)) {
-            try {
-                return modelClass.getConstructor(WorkoutDao.class, ExerciseDao.class, WorkoutLogDao.class, SetLogDao.class)
-                        .newInstance(workoutDao, exerciseDao, workoutLogDao, setLogDao);
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot create an instance of " + modelClass, e);
-            }
+            // Use direct instantiation instead of reflection. It is safer and simpler.
+            return (T) new WorkoutViewModel(workoutDao, exerciseDao, workoutLogDao, setLogDao);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

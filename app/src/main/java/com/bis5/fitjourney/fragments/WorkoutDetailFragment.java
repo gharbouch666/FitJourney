@@ -9,11 +9,11 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bis5.fitjourney.R;
@@ -48,7 +48,6 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
         }
 
         NavController navController = NavHostFragment.findNavController(this);
-        NavigationUI.setupWithNavController(binding.toolbar, navController);
 
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
@@ -57,8 +56,8 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
         setupRecyclerViews();
 
         workoutViewModel.getWorkout(workoutId).observe(getViewLifecycleOwner(), workout -> {
-            if (workout != null) {
-                binding.toolbar.setTitle(workout.getName());
+            if (workout != null && getActivity() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(workout.getName());
             }
         });
 

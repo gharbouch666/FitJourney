@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bis5.fitjourney.databinding.FragmentCreateWorkoutBinding;
 import com.bis5.fitjourney.models.AppDatabase;
+import com.bis5.fitjourney.viewmodels.SharedViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModelFactory;
 import com.google.android.material.chip.Chip;
@@ -22,15 +23,11 @@ public class CreateWorkoutFragment extends Fragment {
 
     private FragmentCreateWorkoutBinding binding;
     private WorkoutViewModel workoutViewModel;
-    private String userEmail;
+    private SharedViewModel sharedViewModel;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCreateWorkoutBinding.inflate(inflater, container, false);
-        if (requireActivity().getIntent() != null) {
-            userEmail = requireActivity().getIntent().getStringExtra("USER_EMAIL");
-        }
         return binding.getRoot();
     }
 
@@ -39,36 +36,46 @@ public class CreateWorkoutFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         AppDatabase database = AppDatabase.getDatabase(requireContext());
-        WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
-        workoutViewModel = new ViewModelProvider(this, viewModelFactory).get(WorkoutViewModel.class);
+        WorkoutViewModelFactory factory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
 
-        binding.btnSaveWorkout.setOnClickListener(v -> saveWorkout());
+        // *** THE FIX: Scope the ViewModel to the Activity to share it across all fragments. ***
+        workoutViewModel = new ViewModelProvider(requireActivity(), factory).get(WorkoutViewModel.class);
+
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        setupClickListeners();
     }
 
-    private void saveWorkout() {
-        int selectedChipId = binding.cgWorkoutTypes.getCheckedChipId();
-        String customName = binding.etWorkoutName.getText().toString().trim();
-        String workoutName = "";
+    private void setupClickListeners() {
+        binding.btnBackToWorkouts.setOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
 
-        if (selectedChipId != View.NO_ID) {
-            Chip selectedChip = getView().findViewById(selectedChipId);
-            if(selectedChip != null) {
-               workoutName = selectedChip.getText().toString();
+        binding.cgWorkoutTypes.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip selectedChip = group.findViewById(checkedId);
+                if (selectedChip != null) {
+                    binding.etWorkoutName.setText(selectedChip.getText().toString());
+                }
             }
-        } else {
-            workoutName = customName;
-        }
+        });
 
-        if (workoutName.isEmpty()) {
-            Toast.makeText(requireContext(), "Please select or enter a workout name", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        binding.btnSaveWorkout.setOnClickListener(v -> {
+            String workoutName = binding.etWorkoutName.getText().toString().trim();
+            String userEmail = sharedViewModel.getUserEmail().getValue();
 
-        if (userEmail != null) {
+            if (workoutName.isEmpty()) {
+                Toast.makeText(getContext(), "Please select or enter a workout name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (userEmail == null || userEmail.isEmpty()) {
+                 Toast.makeText(getContext(), "Error: User data not available. Please restart the app.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             workoutViewModel.createWorkout(workoutName, userEmail);
-            Toast.makeText(requireContext(), "Workout '" + workoutName + "' saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "'" + workoutName + "' created!", Toast.LENGTH_SHORT).show();
             NavHostFragment.findNavController(this).navigateUp();
-        }
+        });
     }
 
     @Override

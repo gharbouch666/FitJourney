@@ -15,27 +15,19 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/action_homeFragment_to_workoutListFragment"
-            app:destination="@id/workoutListFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/workoutListFragment" />
         <action
             android:id="@+id/action_homeFragment_to_workoutDetailFragment"
             app:destination="@id/workoutDetailFragment" />
         <action
             android:id="@+id/action_homeFragment_to_stepCounterFragment"
-            app:destination="@id/stepCounterFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/stepCounterFragment" />
         <action
             android:id="@+id/action_homeFragment_to_nutritionLogFragment"
-            app:destination="@id/nutritionLogFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/nutritionLogFragment" />
         <action
             android:id="@+id/action_homeFragment_to_socialFeedFragment"
-            app:destination="@id/socialFeedFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/socialFeedFragment" />
     </fragment>
 
     <fragment
@@ -43,18 +35,15 @@
         android:name="com.bis5.fitjourney.fragments.WorkoutListFragment"
         android:label="Your Workouts"
         tools:layout="@layout/fragment_workout_list">
-        <!-- The userEmail argument has been removed -->
         <action
             android:id="@+id/action_workoutListFragment_to_workoutDetailFragment"
             app:destination="@id/workoutDetailFragment" />
         <action
             android:id="@+id/action_workoutListFragment_to_createWorkoutFragment"
-            app:destination="@+id/createWorkoutFragment" />
+            app:destination="@id/createWorkoutFragment" />
         <action
             android:id="@+id/action_workoutListFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/workoutListFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <fragment
@@ -123,41 +112,35 @@
         android:name="com.bis5.fitjourney.fragments.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
-        
-    <fragment 
+
+    <fragment
         android:id="@+id/nutritionLogFragment"
         android:name="com.bis5.fitjourney.fragments.NutritionLogFragment"
         android:label="Nutrition"
         tools:layout="@layout/fragment_nutrition_log">
         <action
             android:id="@+id/action_nutritionLogFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/nutritionLogFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/homeFragment" />
     </fragment>
-        
-    <fragment 
+
+    <fragment
         android:id="@+id/stepCounterFragment"
         android:name="com.bis5.fitjourney.fragments.StepCounterFragment"
         android:label="Steps"
         tools:layout="@layout/fragment_step_counter">
         <action
             android:id="@+id/action_stepCounterFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/stepCounterFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/homeFragment" />
     </fragment>
-        
-    <fragment 
+
+    <fragment
         android:id="@+id/socialFeedFragment"
         android:name="com.bis5.fitjourney.fragments.SocialFeedFragment"
         android:label="Social"
         tools:layout="@layout/fragment_social_feed">
         <action
             android:id="@+id/action_socialFeedFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/socialFeedFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/homeFragment" />
     </fragment>
 
 </navigation>

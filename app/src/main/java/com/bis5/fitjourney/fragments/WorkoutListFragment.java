@@ -16,13 +16,17 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bis5.fitjourney.R;
 import com.bis5.fitjourney.adapters.WorkoutListAdapter;
+import com.bis5.fitjourney.databinding.DialogCreateWorkoutBinding;
 import com.bis5.fitjourney.databinding.FragmentWorkoutListBinding;
 import com.bis5.fitjourney.models.AppDatabase;
 import com.bis5.fitjourney.models.Workout;
 import com.bis5.fitjourney.viewmodels.SharedViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModelFactory;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.OnWorkoutListener {
 
@@ -30,7 +34,6 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
     private WorkoutViewModel workoutViewModel;
     private SharedViewModel sharedViewModel;
     private WorkoutListAdapter workoutListAdapter;
-    private String userEmail;
 
     @Nullable
     @Override
@@ -43,32 +46,64 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize the SharedViewModel with the Activity's scope
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
-        workoutViewModel = new ViewModelProvider(this, viewModelFactory).get(WorkoutViewModel.class);
+
+        workoutViewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(WorkoutViewModel.class);
 
         setupRecyclerView();
 
-        // Observe the user's email from the SharedViewModel
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         sharedViewModel.getUserEmail().observe(getViewLifecycleOwner(), email -> {
             if (email != null && !email.isEmpty()) {
-                this.userEmail = email;
-                // Once we have the email, observe the workouts
-                workoutViewModel.getWorkouts(userEmail).observe(getViewLifecycleOwner(), workouts -> {
+                workoutViewModel.getWorkouts(email).observe(getViewLifecycleOwner(), workouts -> {
                     workoutListAdapter.submitList(workouts);
                 });
             }
         });
 
         binding.fabAddWorkout.setOnClickListener(v -> {
-            NavDirections action = 
-                WorkoutListFragmentDirections.actionWorkoutListFragmentToCreateWorkoutFragment();
-            NavHostFragment.findNavController(this).navigate(action);
+            showCreateWorkoutDialog();
         });
     }
+
+    private void showCreateWorkoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Create New Workout");
+
+        // Inflate the custom layout
+        DialogCreateWorkoutBinding dialogBinding = DialogCreateWorkoutBinding.inflate(LayoutInflater.from(requireContext()));
+        builder.setView(dialogBinding.getRoot());
+
+        // Setup chip interaction
+        dialogBinding.cgWorkoutTypes.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip selectedChip = group.findViewById(checkedId);
+                dialogBinding.etWorkoutName.setText(selectedChip.getText());
+            }
+        });
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String workoutName = dialogBinding.etWorkoutName.getText().toString().trim();
+            String userEmail = sharedViewModel.getUserEmail().getValue();
+
+            if (workoutName.isEmpty()) {
+                Toast.makeText(getContext(), "Please select or enter a workout name.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (userEmail == null || userEmail.isEmpty()) {
+                Toast.makeText(getContext(), "Error: User data not found.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            workoutViewModel.createWorkout(workoutName, userEmail);
+            Toast.makeText(getContext(), "'" + workoutName + "' created!", Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
 
     private void setupRecyclerView() {
         workoutListAdapter = new WorkoutListAdapter(this);
