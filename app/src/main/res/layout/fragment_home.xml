@@ -1,404 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:padding="16dp">
+    android:background="@android:color/transparent"
+    android:fillViewport="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="16dp"
+        tools:context=".fragments.HomeFragment">
 
-        <!-- Welcome Header -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            style="@style/TextAppearance.App.Title.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Your Royal Dashboard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvQuoteOfTheDay"
+            style="@style/TextAppearance.App.Body.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="'The body achieves what the mind believes.'"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
+
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/welcomeCard"
-            android:layout_width="match_parent"
+            android:id="@+id/chartCard"
+            style="@style/Widget.App.CardView.Elevated"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/glass_card"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="0dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="24dp">
-
-                <!-- Welcome Text -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvWelcome"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Welcome Back!"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvUserName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Ready for your next workout?"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:textColor="@android:color/white" />
-
-                </LinearLayout>
-
-                <!-- Avatar Button - TOP RIGHT CORNER -->
-                <ImageButton
-                    android:id="@+id/btnAvatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/glass_card"
-                    android:src="@drawable/ic_avatar"
-                    app:tint="@android:color/white" />
-
-            </RelativeLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Quick Stats Row -->
-        <LinearLayout
-            android:id="@+id/quickStatsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:orientation="horizontal">
-
-            <!-- Workouts Completed -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardWorkoutsCompleted"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/glass_card"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tvWorkoutsCompleted"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                        android:textColor="@color/premium_gradient_start"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Workouts"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="@android:color/white" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Total Exercises -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTotalExercises"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/glass_card"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:id="@+id/tvTotalExercises"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="45"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                        android:textColor="@color/premium_gradient_start"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Exercises"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="@android:color/white" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <!-- Today's Workout Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/todaysWorkoutCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/glass_card"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="0dp">
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvQuoteOfTheDay">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="16dp">
 
                 <TextView
+                    style="@style/TextAppearance.App.Title.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TODAY'S WORKOUT"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:text="This Week\'s Conquests" />
 
-                <TextView
-                    android:id="@+id/tvTodaysWorkout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Push Day"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:textColor="@android:color/white" />
-
-                <TextView
-                    android:id="@+id/tvWorkoutTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="6 exercises • 45 mins"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:textColor="@android:color/white" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStartWorkout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/gradient_button"
-                    android:text="START WORKOUT"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    app:icon="@drawable/ic_play"
-                    app:iconTint="@android:color/white" />
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick Actions -->
-        <TextView
-            android:id="@+id/tvQuickActions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="QUICK ACTIONS"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+        <!-- Quick Action Buttons -->
 
-        <!-- Quick Actions Grid -->
         <LinearLayout
-            android:id="@+id/quickActionsLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chartCard">
 
-            <!-- First Row -->
-            <LinearLayout
-                android:id="@+id/quickActionsRow1"
-                android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWorkouts"
+                style="@style/Widget.App.CardView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1">
 
-                <!-- Workout Tracker -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardWorkouts"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/glass_card"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/dumbell" 
+                        app:tint="@color/a_500" />
+                    <TextView
+                        style="@style/TextAppearance.App.Body.Large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Workouts" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_fitness"
-                            app:tint="@android:color/white" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Workouts"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Nutrition -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardNutrition"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/glass_card"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_nutrition"
-                            app:tint="@android:color/white" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Nutrition"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <!-- Second Row -->
-            <LinearLayout
-                android:id="@+id/quickActionsRow2"
-                android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNutrition"
+                style="@style/Widget.App.CardView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Progress -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardProgress"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/glass_card"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_progress"
-                            app:tint="@android:color/white" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Progress"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Social -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSocial"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/glass_card"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_social"
-                            app:tint="@android:color/white" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Social"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
+                android:layout_marginStart="8dp"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_nutrition" 
+                        app:tint="@color/a_500" />
+                    <TextView
+                        style="@style/TextAppearance.App.Body.Large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Nutrition" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

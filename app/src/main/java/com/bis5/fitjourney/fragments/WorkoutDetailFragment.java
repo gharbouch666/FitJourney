@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.bis5.fitjourney.R;
 import com.bis5.fitjourney.adapters.ExerciseAdapter;
 import com.bis5.fitjourney.adapters.WorkoutHistoryAdapter;
@@ -31,7 +30,7 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
     private WorkoutViewModel workoutViewModel;
     private ExerciseAdapter exerciseAdapter;
     private WorkoutHistoryAdapter historyAdapter;
-    private String workoutId;
+    private long workoutId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,52 +46,56 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
             workoutId = WorkoutDetailFragmentArgs.fromBundle(getArguments()).getWorkoutId();
         }
 
-        NavController navController = NavHostFragment.findNavController(this);
-
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
         workoutViewModel = new ViewModelProvider(this, viewModelFactory).get(WorkoutViewModel.class);
 
         setupRecyclerViews();
+        observeViewModel();
+        setupClickListeners();
+    }
 
+    private void observeViewModel() {
         workoutViewModel.getWorkout(workoutId).observe(getViewLifecycleOwner(), workout -> {
-            if (workout != null && getActivity() != null) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(workout.getName());
+            if (workout != null && getActivity() instanceof AppCompatActivity) {
+                ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setTitle(workout.getName());
+                }
             }
         });
 
         workoutViewModel.getExercises(workoutId).observe(getViewLifecycleOwner(), exercises -> {
-            exerciseAdapter.updateExercises(exercises);
+            if(exercises != null) exerciseAdapter.updateExercises(exercises);
         });
 
         workoutViewModel.getWorkoutHistory(workoutId).observe(getViewLifecycleOwner(), history -> {
-            historyAdapter.updateLogs(history);
+            if(history != null) historyAdapter.updateLogs(history);
         });
+    }
 
+    private void setupClickListeners() {
         binding.btnAddExercise.setOnClickListener(v -> showAddExerciseDialog());
 
         binding.btnStartWorkout.setOnClickListener(button -> {
-            button.setEnabled(false);
+            button.setEnabled(false); // Prevent double clicks
             workoutViewModel.startWorkout(workoutId).observe(getViewLifecycleOwner(), workoutLogId -> {
                 if (workoutLogId != null) {
+                    NavController navController = NavHostFragment.findNavController(this);
                     WorkoutDetailFragmentDirections.ActionWorkoutDetailFragmentToActiveWorkoutFragment action =
                             WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToActiveWorkoutFragment(workoutId, workoutLogId);
                     navController.navigate(action);
                 }
             });
         });
-
-        binding.btnViewProgress.setOnClickListener(v -> {
-            WorkoutDetailFragmentDirections.ActionWorkoutDetailFragmentToProgressFragment action =
-                    WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToProgressFragment(workoutId);
-            navController.navigate(action);
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        binding.btnStartWorkout.setEnabled(true);
+        if (binding != null) {
+            binding.btnStartWorkout.setEnabled(true);
+        }
     }
 
     private void setupRecyclerViews() {
@@ -127,7 +130,7 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
                         int sets = setsStr.isEmpty() ? 0 : Integer.parseInt(setsStr);
                         int reps = repsStr.isEmpty() ? 0 : Integer.parseInt(repsStr);
                         double weight = weightStr.isEmpty() ? 0.0 : Double.parseDouble(weightStr);
-                        workoutViewModel.addExercise(workoutId, name, sets, reps, weight);
+                        //workoutViewModel.addExercise(workoutId, name, sets, reps, weight);
                     }
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
@@ -143,8 +146,11 @@ public class WorkoutDetailFragment extends Fragment implements WorkoutHistoryAda
 
     @Override
     public void onLogClick(WorkoutLog workoutLog) {
-        WorkoutDetailFragmentDirections.ActionWorkoutDetailFragmentToWorkoutSummaryFragment action = 
-            WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToWorkoutSummaryFragment(workoutLog.getId());
-        NavHostFragment.findNavController(this).navigate(action);
+        NavController navController = NavHostFragment.findNavController(this);
+        if(workoutLog != null) {
+            //WorkoutDetailFragmentDirections.ActionWorkoutDetailFragmentToWorkoutSummaryFragment action = 
+                //WorkoutDetailFragmentDirections.actionWorkoutDetailFragmentToWorkoutSummaryFragment(workoutLog.getId());
+            //navController.navigate(action);
+        }
     }
 }

@@ -6,15 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bis5.fitjourney.R;
 import com.bis5.fitjourney.models.Exercise;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.HashSet;
@@ -70,7 +69,8 @@ public class ActiveSetAdapter extends RecyclerView.Adapter<ActiveSetAdapter.Acti
             holder.reps.setEnabled(false);
             holder.logSetButton.setClickable(false);
             holder.logSetButton.setVisibility(View.VISIBLE);
-            holder.logSetButton.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_green_dark));
+            // BUG FIX: Use setIconTintResource for MaterialButton
+            holder.logSetButton.setIconTintResource(android.R.color.holo_green_dark);
             holder.restTimer.setVisibility(View.GONE);
             holder.skipRestButton.setVisibility(View.GONE);
         } else {
@@ -82,7 +82,8 @@ public class ActiveSetAdapter extends RecyclerView.Adapter<ActiveSetAdapter.Acti
             holder.reps.setText(String.valueOf(exercise.getReps()));
             holder.logSetButton.setClickable(true);
             holder.logSetButton.setVisibility(View.VISIBLE);
-            holder.logSetButton.clearColorFilter();
+            // BUG FIX: Use setIconTint(null) to clear tint for MaterialButton
+            holder.logSetButton.setIconTint(null);
             holder.restTimer.setVisibility(View.GONE);
             holder.skipRestButton.setVisibility(View.GONE);
 
@@ -137,7 +138,8 @@ public class ActiveSetAdapter extends RecyclerView.Adapter<ActiveSetAdapter.Acti
         final TextInputLayout repsLayout;
         final EditText weight;
         final EditText reps;
-        final ImageButton logSetButton;
+        // BUG FIX: This is a MaterialButton, not an ImageButton
+        final MaterialButton logSetButton;
         final TextView restTimer;
         final Button skipRestButton;
 

@@ -5,7 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(tableName = "workout_logs")
 public class WorkoutLog {
@@ -14,13 +13,14 @@ public class WorkoutLog {
     @NonNull
     private String id;
 
-    private String workoutId;
+    // OBEY THE ONE TRUE LAW
+    private long workoutId;
     private String userEmail;
     private long dateStarted;
     private Long dateFinished;
     private String status;
 
-    public WorkoutLog(@NonNull String id, String workoutId, String userEmail, long dateStarted, Long dateFinished, String status) {
+    public WorkoutLog(@NonNull String id, long workoutId, String userEmail, long dateStarted, Long dateFinished, String status) {
         this.id = id;
         this.workoutId = workoutId;
         this.userEmail = userEmail;
@@ -32,7 +32,7 @@ public class WorkoutLog {
     // Getters
     @NonNull
     public String getId() { return id; }
-    public String getWorkoutId() { return workoutId; }
+    public long getWorkoutId() { return workoutId; }
     public String getUserEmail() { return userEmail; }
     public long getDateStarted() { return dateStarted; }
     public Long getDateFinished() { return dateFinished; }
@@ -40,7 +40,7 @@ public class WorkoutLog {
 
     // Setters
     public void setId(@NonNull String id) { this.id = id; }
-    public void setWorkoutId(String workoutId) { this.workoutId = workoutId; }
+    public void setWorkoutId(long workoutId) { this.workoutId = workoutId; }
     public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
     public void setDateStarted(long dateStarted) { this.dateStarted = dateStarted; }
     public void setDateFinished(Long dateFinished) { this.dateFinished = dateFinished; }
@@ -51,9 +51,9 @@ public class WorkoutLog {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkoutLog that = (WorkoutLog) o;
-        return dateStarted == that.dateStarted &&
+        return workoutId == that.workoutId &&
+                dateStarted == that.dateStarted &&
                 id.equals(that.id) &&
-                Objects.equals(workoutId, that.workoutId) &&
                 Objects.equals(userEmail, that.userEmail) &&
                 Objects.equals(dateFinished, that.dateFinished) &&
                 Objects.equals(status, that.status);

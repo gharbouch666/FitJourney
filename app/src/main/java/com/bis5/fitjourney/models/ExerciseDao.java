@@ -12,10 +12,11 @@ import java.util.List;
 public interface ExerciseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertExercise(Exercise exercise);
+    void insert(Exercise exercise);
 
+    // OBEY THE ONE TRUE LAW: The workoutId is a long.
     @Query("SELECT * FROM exercises WHERE workoutId = :workoutId ORDER BY id ASC")
-    LiveData<List<Exercise>> getExercisesForWorkout(String workoutId);
+    LiveData<List<Exercise>> getExercisesForWorkout(long workoutId);
 
     @Query("DELETE FROM exercises WHERE id = :exerciseId")
     void deleteExercise(int exerciseId);

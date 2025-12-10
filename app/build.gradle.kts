@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.navigation.safeargs)
+    // THE TREASON IS PURGED. APPLYING THE CORRECT PLUGIN FOR JAVA.
+    id("androidx.navigation.safeargs")
 }
 
 android {

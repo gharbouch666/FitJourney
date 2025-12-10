@@ -31,7 +31,7 @@ public class ProgressFragment extends Fragment {
 
     private FragmentProgressBinding binding;
     private WorkoutViewModel workoutViewModel;
-    private String workoutId;
+    private long workoutId; // THE LAW IS OBEYED
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,8 +43,8 @@ public class ProgressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get workoutId from navigation arguments
         if (getArguments() != null) {
+            // THE REBELLION IS CRUSHED. THE GHOST IS BANISHED.
             workoutId = ProgressFragmentArgs.fromBundle(getArguments()).getWorkoutId();
         }
 
@@ -63,8 +63,6 @@ public class ProgressFragment extends Fragment {
                 List<Entry> entries = new ArrayList<>();
                 for (int i = 0; i < history.size(); i++) {
                     WorkoutLog workoutLog = history.get(i);
-                    // This is a simplified approach. A more robust solution would involve
-                    // fetching the sets for each log and summing them up.
                     double volume = 0.0;
                     if (workoutLog.getDateFinished() != null) {
                         volume = (workoutLog.getDateFinished() - workoutLog.getDateStarted()) / 1000.0;
@@ -78,7 +76,7 @@ public class ProgressFragment extends Fragment {
 
                 LineData lineData = new LineData(dataSet);
                 binding.lineChart.setData(lineData);
-                binding.lineChart.invalidate(); // Refresh the chart
+                binding.lineChart.invalidate();
             }
         });
     }

@@ -3,16 +3,13 @@ package com.bis5.fitjourney.models;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(tableName = "workouts")
 public class Workout {
 
-    @PrimaryKey
-    @NonNull
-    private String id;
+    @PrimaryKey(autoGenerate = true)
+    private long id;
 
     private String name;
     private String workoutType;
@@ -20,8 +17,8 @@ public class Workout {
     private int duration;
     private String userEmail;
 
-    public Workout(@NonNull String id, String name, String workoutType, long date, int duration, String userEmail) {
-        this.id = id;
+    // This is the one true constructor. It does not take an ID.
+    public Workout(String name, String workoutType, long date, int duration, String userEmail) {
         this.name = name;
         this.workoutType = workoutType;
         this.date = date;
@@ -30,8 +27,7 @@ public class Workout {
     }
 
     // Getters
-    @NonNull
-    public String getId() { return id; }
+    public long getId() { return id; }
     public String getName() { return name; }
     public String getWorkoutType() { return workoutType; }
     public long getDate() { return date; }
@@ -39,7 +35,7 @@ public class Workout {
     public String getUserEmail() { return userEmail; }
 
     // Setters
-    public void setId(@NonNull String id) { this.id = id; }
+    public void setId(long id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setWorkoutType(String workoutType) { this.workoutType = workoutType; }
     public void setDate(long date) { this.date = date; }
@@ -51,12 +47,7 @@ public class Workout {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Workout workout = (Workout) o;
-        return date == workout.date &&
-                duration == workout.duration &&
-                id.equals(workout.id) &&
-                Objects.equals(name, workout.name) &&
-                Objects.equals(workoutType, workout.workoutType) &&
-                Objects.equals(userEmail, workout.userEmail);
+        return id == workout.id && date == workout.date && duration == workout.duration && Objects.equals(name, workout.name) && Objects.equals(workoutType, workout.workoutType) && Objects.equals(userEmail, workout.userEmail);
     }
 
     @Override

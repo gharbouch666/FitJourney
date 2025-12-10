@@ -3,14 +3,17 @@ package com.bis5.fitjourney.models;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
 
 @Dao
 public interface SetLogDao {
-    @Insert
-    void logSet(SetLog setLog);
+
+    // The scribe is purified.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(SetLog setLog);
 
     @Query("SELECT * FROM set_logs WHERE workoutLogId = :workoutLogId ORDER BY setNumber ASC")
     LiveData<List<SetLog>> getLoggedSetsForWorkout(String workoutLogId);

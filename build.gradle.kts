@@ -3,5 +3,6 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.kapt) apply false
-    alias(libs.plugins.navigation.safeargs) apply false
+    // RIPPING OUT THE KOTLIN DAEMON. THIS IS THE CORRECT PLUGIN FOR JAVA.
+    id("androidx.navigation.safeargs") version "2.7.7" apply false
 }

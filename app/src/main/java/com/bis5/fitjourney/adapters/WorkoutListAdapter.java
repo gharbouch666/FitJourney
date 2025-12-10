@@ -1,6 +1,7 @@
 package com.bis5.fitjourney.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bis5.fitjourney.R;
 import com.bis5.fitjourney.databinding.ItemWorkoutBinding;
 import com.bis5.fitjourney.models.Workout;
-
-import java.util.Objects;
 
 public class WorkoutListAdapter extends ListAdapter<Workout, WorkoutListAdapter.WorkoutViewHolder> {
 
@@ -57,41 +56,44 @@ public class WorkoutListAdapter extends ListAdapter<Workout, WorkoutListAdapter.
         public void bind(Workout workout) {
             binding.tvWorkoutName.setText(workout.getName());
 
-            int iconRes;
-            switch (workout.getName().toLowerCase()) {
-                case "push day":
-                    iconRes = R.drawable.push;
-                    break;
-                case "pull day":
-                    iconRes = R.drawable.pull;
-                    break;
-                case "leg day":
-                    iconRes = R.drawable.legs;
-                    break;
-                case "upper body":
-                    iconRes = R.drawable.upper;
-                    break;
-                case "lower body":
-                    iconRes = R.drawable.lower;
-                    break;
-                case "core":
-                    iconRes = R.drawable.core;
-                    break;
-                case "cardio":
-                    iconRes = R.drawable.cardio;
-                    break;
-                default:
-                    iconRes = R.drawable.dumbell;
-                    break;
-            }
+            // Set icon based on workout name
+            int iconRes = getIconForWorkout(workout.getName());
             binding.ivWorkoutIcon.setImageResource(iconRes);
+
+            // For now, these fields are hidden as they are not in the Workout object
+            binding.tvExerciseCount.setVisibility(View.GONE);
+            binding.tvLastPerformed.setVisibility(View.GONE);
+        }
+
+        private int getIconForWorkout(String workoutName) {
+            if (workoutName == null) return R.drawable.ic_fitness;
+            String lowerCaseName = workoutName.toLowerCase();
+
+            if (lowerCaseName.contains("push")) {
+                return R.drawable.push;
+            } else if (lowerCaseName.contains("pull")) {
+                return R.drawable.pull;
+            } else if (lowerCaseName.contains("leg")) {
+                return R.drawable.legs;
+            } else if (lowerCaseName.contains("core")) {
+                return R.drawable.core;
+            } else if (lowerCaseName.contains("cardio")) {
+                return R.drawable.cardio;
+            } else if (lowerCaseName.contains("upper")) {
+                return R.drawable.upper;
+            } else if (lowerCaseName.contains("lower")) {
+                return R.drawable.lower;
+            } else {
+                return R.drawable.ic_fitness;
+            }
         }
     }
 
     private static final DiffUtil.ItemCallback<Workout> WORKOUT_DIFF_CALLBACK = new DiffUtil.ItemCallback<Workout>() {
         @Override
         public boolean areItemsTheSame(@NonNull Workout oldItem, @NonNull Workout newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            // THE FINAL PURGE: The treasonous code is CRUSHED.
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override

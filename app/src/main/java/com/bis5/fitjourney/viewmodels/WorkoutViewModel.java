@@ -2,8 +2,10 @@ package com.bis5.fitjourney.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.bis5.fitjourney.models.AppDatabase;
 import com.bis5.fitjourney.models.Exercise;
 import com.bis5.fitjourney.models.ExerciseDao;
 import com.bis5.fitjourney.models.SetLog;
@@ -12,12 +14,10 @@ import com.bis5.fitjourney.models.Workout;
 import com.bis5.fitjourney.models.WorkoutDao;
 import com.bis5.fitjourney.models.WorkoutLog;
 import com.bis5.fitjourney.models.WorkoutLogDao;
+import com.bis5.fitjourney.other.WorkoutWithExercises;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class WorkoutViewModel extends ViewModel {
 
@@ -25,31 +25,33 @@ public class WorkoutViewModel extends ViewModel {
     private final ExerciseDao exerciseDao;
     private final WorkoutLogDao workoutLogDao;
     private final SetLogDao setLogDao;
-    private final ExecutorService executorService;
+
+    public final MutableLiveData<String> userEmailTrigger = new MutableLiveData<>();
+
+    public final LiveData<WorkoutWithExercises> mostRecentWorkout;
+    public final LiveData<List<Workout>> userWorkouts;
 
     public WorkoutViewModel(WorkoutDao workoutDao, ExerciseDao exerciseDao, WorkoutLogDao workoutLogDao, SetLogDao setLogDao) {
         this.workoutDao = workoutDao;
         this.exerciseDao = exerciseDao;
         this.workoutLogDao = workoutLogDao;
         this.setLogDao = setLogDao;
-        this.executorService = Executors.newSingleThreadExecutor();
+
+        mostRecentWorkout = Transformations.switchMap(userEmailTrigger, workoutDao::getMostRecentWorkoutWithExercises);
+        userWorkouts = Transformations.switchMap(userEmailTrigger, workoutDao::getWorkoutsForUser);
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        executorService.shutdown();
+    public void loadUser(String userEmail) {
+        if (userEmail != null && !userEmail.equals(userEmailTrigger.getValue())) {
+            userEmailTrigger.setValue(userEmail);
+        }
     }
 
-    public LiveData<List<Workout>> getWorkouts(String userEmail) {
-        return workoutDao.getWorkoutsForUser(userEmail);
-    }
-
-    public LiveData<Workout> getWorkout(String workoutId) {
+    public LiveData<Workout> getWorkout(long workoutId) {
         return workoutDao.getWorkout(workoutId);
     }
 
-    public LiveData<List<Exercise>> getExercises(String workoutId) {
+    public LiveData<List<Exercise>> getExercises(long workoutId) {
         return exerciseDao.getExercisesForWorkout(workoutId);
     }
 
@@ -57,64 +59,42 @@ public class WorkoutViewModel extends ViewModel {
         return setLogDao.getLoggedSetsForWorkout(workoutLogId);
     }
 
-    public void createDefaultWorkoutsIfNoneExist(String userEmail) {
-        executorService.execute(() -> {
-            if (workoutDao.getWorkoutCountForUser(userEmail) == 0) {
-                List<Workout> defaultWorkouts = Arrays.asList(
-                    new Workout(UUID.randomUUID().toString(), "Push Day", "Push Day", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Pull Day", "Pull Day", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Leg Day", "Leg Day", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Upper Body", "Upper Body", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Lower Body", "Lower Body", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Core", "Core", System.currentTimeMillis(), 0, userEmail),
-                    new Workout(UUID.randomUUID().toString(), "Cardio", "Cardio", System.currentTimeMillis(), 0, userEmail)
-                );
-                for (Workout workout : defaultWorkouts) {
-                    workoutDao.insertWorkout(workout);
-                }
-            }
-        });
-    }
-
     public void createWorkout(String name, String userEmail) {
-        executorService.execute(() -> {
-            Workout newWorkout = new Workout(UUID.randomUUID().toString(), name, name, System.currentTimeMillis(), 0, userEmail);
-            workoutDao.insertWorkout(newWorkout);
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Workout newWorkout = new Workout(name, name, System.currentTimeMillis(), 0, userEmail);
+            workoutDao.insert(newWorkout);
         });
     }
 
-    public void updateWorkoutName(String workoutId, String newName) {
-        executorService.execute(() -> workoutDao.updateWorkoutName(workoutId, newName));
+    public void updateWorkoutName(long workoutId, String newName) {
+        AppDatabase.databaseWriteExecutor.execute(() -> workoutDao.updateWorkoutName(workoutId, newName));
     }
 
     public void deleteWorkout(Workout workout) {
-        executorService.execute(() -> workoutDao.deleteWorkout(workout));
+        AppDatabase.databaseWriteExecutor.execute(() -> workoutDao.delete(workout));
     }
 
-    public void addExercise(String workoutId, String name, int sets, int reps, double weight) {
-        executorService.execute(() -> {
-            Exercise newExercise = new Exercise(workoutId, name, sets, reps, weight);
-            exerciseDao.insertExercise(newExercise);
+    public void addExercise(long workoutId, String name, int sets, int reps) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            Exercise newExercise = new Exercise(workoutId, name, sets, reps);
+            exerciseDao.insert(newExercise);
         });
     }
 
-    public LiveData<String> startWorkout(String workoutId) {
+    public LiveData<String> startWorkout(long workoutId) {
         MutableLiveData<String> workoutLogIdLiveData = new MutableLiveData<>();
-        executorService.execute(() -> {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
             String userEmail = workoutDao.getUserEmailForWorkout(workoutId);
             if (userEmail == null) userEmail = "";
 
             WorkoutLog workoutLog = new WorkoutLog(UUID.randomUUID().toString(), workoutId, userEmail, System.currentTimeMillis(), null, "in-progress");
-            long workoutLogId = workoutLogDao.startWorkout(workoutLog);
-            // Note: startWorkout returns the rowId, not the UUID. This might be a bug from the original code.
-            // For now, we will assume we need the string representation of the row id. 
-            // A better implementation would be to return the WorkoutLog's UUID string id.
-            workoutLogIdLiveData.postValue(String.valueOf(workoutLogId));
+            workoutLogDao.insert(workoutLog);
+            workoutLogIdLiveData.postValue(workoutLog.getId());
         });
         return workoutLogIdLiveData;
     }
 
-    public LiveData<List<WorkoutLog>> getWorkoutHistory(String workoutId) {
+    public LiveData<List<WorkoutLog>> getWorkoutHistory(long workoutId) {
         return workoutLogDao.getLogsForWorkout(workoutId);
     }
 
@@ -131,13 +111,13 @@ public class WorkoutViewModel extends ViewModel {
     }
 
     public void logSet(String workoutLogId, String exerciseName, int setNumber, int reps, double weight) {
-        executorService.execute(() -> {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
             SetLog setLog = new SetLog(UUID.randomUUID().toString(), workoutLogId, exerciseName, setNumber, reps, weight, System.currentTimeMillis(), "completed");
-            setLogDao.logSet(setLog);
+            setLogDao.insert(setLog);
         });
     }
 
     public void finishWorkout(String logId) {
-        executorService.execute(() -> workoutLogDao.finishWorkout(logId, System.currentTimeMillis()));
+        AppDatabase.databaseWriteExecutor.execute(() -> workoutLogDao.finishWorkout(logId, System.currentTimeMillis()));
     }
 }

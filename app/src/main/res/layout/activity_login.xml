@@ -36,7 +36,6 @@
 
     <!-- Email -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etEmail"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,6 +46,7 @@
         app:boxCornerRadiusBottomEnd="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
@@ -56,7 +56,6 @@
 
     <!-- Password -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etPassword"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,6 +67,7 @@
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -109,7 +109,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account?"
+            android:text="Don\'t have an account?"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp" />
 

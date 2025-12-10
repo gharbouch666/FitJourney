@@ -26,11 +26,11 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
     private FragmentActiveWorkoutBinding binding;
     private WorkoutViewModel workoutViewModel;
     private ActiveExerciseAdapter exerciseAdapter;
-    private String workoutId;
+    private long workoutId;
     private String workoutLogId;
     private long startTime = 0;
-    private Handler timerHandler = new Handler();
-    private Runnable timerRunnable = new Runnable() {
+    private final Handler timerHandler = new Handler();
+    private final Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             long millis = System.currentTimeMillis() - startTime;
@@ -65,9 +65,9 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
 
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
+        // THE BUG IS FIXED. THE VIEWMODEL IS NOW SCOPED TO THIS FRAGMENT.
         workoutViewModel = new ViewModelProvider(this, viewModelFactory).get(WorkoutViewModel.class);
 
-        // Back button functionality
         binding.toolbar.setNavigationOnClickListener(v -> {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle("Exit Workout")
@@ -100,7 +100,6 @@ public class ActiveWorkoutFragment extends Fragment implements ActiveExerciseAda
             navController.navigate(action);
         });
 
-        // Start the working timer
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
     }

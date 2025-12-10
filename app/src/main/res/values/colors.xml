@@ -4,25 +4,26 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Primary Colors -->
-    <color name="md_theme_primary">#43D7B6</color> <!-- Accent Green/Teal -->
-    <color name="md_theme_onPrimary">#00382D</color>
+    <!-- New Super App Palette -->
+    <color name="p_900">#0D131A</color> <!-- Deepest Blue - App Background Start -->
+    <color name="p_800">#1A242F</color> <!-- Dark Blue - App Background End -->
+    <color name="p_700">#2C3A4A</color> <!-- Lighter Blue - Card Backgrounds -->
+    <color name="p_400">#7B8C9D</color> <!-- Subdued Text / Icons -->
 
-    <!-- Surface & Background Colors -->
-    <color name="md_theme_surface">#191C1B</color> <!-- Dark background for surfaces like cards -->
-    <color name="md_theme_onSurface">#E1E3E1</color> <!-- Text on dark background -->
-    <color name="md_theme_surfaceVariant">#3F4946</color> <!-- Slightly lighter variant for contrast -->
-    <color name="md_theme_onSurfaceVariant">#BFC9C5</color>
-    <color name="md_theme_background">#191C1B</color> <!-- Main app background -->
-    <color name="md_theme_onBackground">#E1E3E1</color>
+    <color name="a_500">#00FFDD</color> <!-- Vibrant Teal/Mint - Primary Accent -->
+    <color name="a_400">#66FFEA</color> <!-- Lighter accent for gradients -->
 
-    <!-- Outline/Border Color -->
-    <color name="md_theme_outline">#89938F</color>
+    <!-- Gradient Colors -->
+    <color name="g_start">#00FFDD</color>
+    <color name="g_end">#0077FF</color>
 
+    <!-- Legacy/Untouched -->
     <color name="glass_background">#20FFFFFF</color>
     <color name="glass_border">#30FFFFFF</color>
     <color name="premium_gradient_start">#FF6B35</color>
     <color name="premium_gradient_end">#F7931E</color>
+
+    <color name="glass_card_background">#1AFFFFFF</color> <!-- Semi-transparent white for the glass card effect -->
 
     <color name="primary_color">#FF6B35</color>
     <color name="primary_dark">#E55A2B</color>
@@ -30,4 +31,16 @@
     <color name="gray_600">#757575</color>
     <color name="gray_300">#E0E0E0</color>
     <color name="purple_500">#FF6200EE</color>
+
+    <!-- Material 3 Theming (Will be replaced by new palette) -->
+    <color name="md_theme_primary">@color/a_500</color>
+    <color name="md_theme_onPrimary">@color/p_900</color>
+    <color name="md_theme_surface">@color/p_800</color>
+    <color name="md_theme_onSurface">@color/white</color>
+    <color name="md_theme_surfaceVariant">@color/p_700</color>
+    <color name="md_theme_onSurfaceVariant">@color/p_400</color>
+    <color name="md_theme_background">@color/p_900</color>
+    <color name="md_theme_onBackground">@color/white</color>
+    <color name="md_theme_outline">@color/p_700</color>
+
 </resources>

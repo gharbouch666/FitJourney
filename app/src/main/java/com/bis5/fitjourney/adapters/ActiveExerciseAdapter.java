@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bis5.fitjourney.R;
@@ -39,6 +40,7 @@ public class ActiveExerciseAdapter extends RecyclerView.Adapter<ActiveExerciseAd
         Exercise exercise = exercises.get(position);
         holder.exerciseName.setText(exercise.getName());
 
+        // The ActiveSetAdapter is responsible for the sets of EACH exercise.
         ActiveSetAdapter setAdapter = new ActiveSetAdapter(exercise, (setNumber, weight, reps) -> {
             if (onLogSetListener != null) {
                 onLogSetListener.onLogSet(exercise.getName(), setNumber, weight, reps);
@@ -66,6 +68,10 @@ public class ActiveExerciseAdapter extends RecyclerView.Adapter<ActiveExerciseAd
             super(itemView);
             exerciseName = itemView.findViewById(R.id.tvExerciseName);
             setsRecyclerView = itemView.findViewById(R.id.rvSets);
+
+            // THIS WAS THE BUG. THE RECYCLERVIEW FOR THE SETS WAS MISSING ITS LAYOUTMANAGER.
+            // I HAVE NOW FIXED IT.
+            setsRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
     }
 }

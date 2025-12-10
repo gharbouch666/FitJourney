@@ -3,33 +3,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
+    <!-- Login/Register -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.bis5.fitjourney.fragments.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.bis5.fitjourney.fragments.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Main Flow -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.bis5.fitjourney.fragments.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_workoutListFragment"
             app:destination="@id/workoutListFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_workoutDetailFragment"
-            app:destination="@id/workoutDetailFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_stepCounterFragment"
-            app:destination="@id/stepCounterFragment" />
         <action
             android:id="@+id/action_homeFragment_to_nutritionLogFragment"
             app:destination="@id/nutritionLogFragment" />
         <action
+            android:id="@+id/action_homeFragment_to_stepCounterFragment"
+            app:destination="@id/stepCounterFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_socialFeedFragment"
             app:destination="@id/socialFeedFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.bis5.fitjourney.fragments.UserProfileFragment"
+        android:label="User Profile"
+        tools:layout="@layout/fragment_user_profile" />
+
+    <!-- Workout Flow -->
     <fragment
         android:id="@+id/workoutListFragment"
         android:name="com.bis5.fitjourney.fragments.WorkoutListFragment"
@@ -38,19 +71,7 @@
         <action
             android:id="@+id/action_workoutListFragment_to_workoutDetailFragment"
             app:destination="@id/workoutDetailFragment" />
-        <action
-            android:id="@+id/action_workoutListFragment_to_createWorkoutFragment"
-            app:destination="@id/createWorkoutFragment" />
-        <action
-            android:id="@+id/action_workoutListFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
-
-    <fragment
-        android:id="@+id/createWorkoutFragment"
-        android:name="com.bis5.fitjourney.fragments.CreateWorkoutFragment"
-        android:label="Create Workout"
-        tools:layout="@layout/fragment_create_workout" />
 
     <fragment
         android:id="@+id/workoutDetailFragment"
@@ -59,13 +80,10 @@
         tools:layout="@layout/fragment_workout_detail">
         <argument
             android:name="workoutId"
-            app:argType="string" />
+            app:argType="long" />
         <action
             android:id="@+id/action_workoutDetailFragment_to_activeWorkoutFragment"
             app:destination="@id/activeWorkoutFragment" />
-        <action
-            android:id="@+id/action_workoutDetailFragment_to_workoutSummaryFragment"
-            app:destination="@id/workoutSummaryFragment" />
         <action
             android:id="@+id/action_workoutDetailFragment_to_progressFragment"
             app:destination="@id/progressFragment" />
@@ -78,7 +96,7 @@
         tools:layout="@layout/fragment_active_workout">
         <argument
             android:name="workoutId"
-            app:argType="string" />
+            app:argType="long" />
         <argument
             android:name="workoutLogId"
             app:argType="string" />
@@ -104,43 +122,36 @@
         tools:layout="@layout/fragment_progress">
         <argument
             android:name="workoutId"
-            app:argType="string" />
+            app:argType="long" />
     </fragment>
 
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.bis5.fitjourney.fragments.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
-
+    <!-- Other Features -->
     <fragment
         android:id="@+id/nutritionLogFragment"
         android:name="com.bis5.fitjourney.fragments.NutritionLogFragment"
         android:label="Nutrition"
         tools:layout="@layout/fragment_nutrition_log">
         <action
-            android:id="@+id/action_nutritionLogFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_nutritionLogFragment_to_calorieCalculatorFragment"
+            app:destination="@id/calorieCalculatorFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/calorieCalculatorFragment"
+        android:name="com.bis5.fitjourney.fragments.CalorieCalculatorFragment"
+        android:label="Calorie Calculator"
+        tools:layout="@layout/fragment_calorie_calculator" />
 
     <fragment
         android:id="@+id/stepCounterFragment"
         android:name="com.bis5.fitjourney.fragments.StepCounterFragment"
         android:label="Steps"
-        tools:layout="@layout/fragment_step_counter">
-        <action
-            android:id="@+id/action_stepCounterFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_step_counter" />
 
     <fragment
         android:id="@+id/socialFeedFragment"
         android:name="com.bis5.fitjourney.fragments.SocialFeedFragment"
         android:label="Social"
-        tools:layout="@layout/fragment_social_feed">
-        <action
-            android:id="@+id/action_socialFeedFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_social_feed" />
 
 </navigation>

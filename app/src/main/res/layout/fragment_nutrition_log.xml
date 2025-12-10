@@ -1,18 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     tools:context=".fragments.NutritionLogFragment">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Calorie & Macro Dashboard -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/macroCard"
+            style="@style/Widget.App.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvTotalCaloriesLabel"
+                    style="@style/TextAppearance.App.Title.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today's Intake"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTotalCalories"
+                    style="@style/TextAppearance.App.Headline.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/a_500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTotalCaloriesLabel"
+                    tools:text="2,045" />
+
+                <TextView
+                    android:id="@+id/tvCalorieGoal"
+                    style="@style/TextAppearance.App.Body.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTotalCalories"
+                    tools:text="/ 2,500 kcal Goal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCalculator"
+                    style="@style/Widget.App.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Goal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Macro Analysis -->
+                <LinearLayout
+                    android:id="@+id/macroLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/tvCalorieGoal">
+
+                    <!-- Protein -->
+                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/TextAppearance.App.Body.Large" android:text="Protein" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/tvProteinProgress" style="@style/TextAppearance.App.Body.Small" android:layout_marginStart="8dp" tools:text="120g / 150g" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressProtein"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:progress="80" />
+
+                    <!-- Carbs -->
+                     <LinearLayout android:orientation="horizontal" android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/TextAppearance.App.Body.Large" android:text="Carbohydrates" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/tvCarbsProgress" style="@style/TextAppearance.App.Body.Small" android:layout_marginStart="8dp" tools:text="200g / 250g" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressCarbs"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:progress="80" />
+
+                    <!-- Fat -->
+                     <LinearLayout android:orientation="horizontal" android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/TextAppearance.App.Body.Large" android:text="Fat" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/tvFatProgress" style="@style/TextAppearance.App.Body.Small" android:layout_marginStart="8dp" tools:text="50g / 70g" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressFat"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:progress="71" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Logged Items List -->
+        <TextView
+            android:id="@+id/tvLoggedMealsLabel"
+            style="@style/TextAppearance.App.Title.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Logged Meals" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFoodItems"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_food" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddFood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nutrition Log (Placeholder)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/a_500"
+        app:tint="@color/p_900" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

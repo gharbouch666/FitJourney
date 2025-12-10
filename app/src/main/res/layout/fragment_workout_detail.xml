@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_background"
     android:padding="16dp"
     tools:context=".fragments.WorkoutDetailFragment">
 
     <TextView
         android:id="@+id/tvExercisesLabel"
+        style="@style/TextAppearance.App.Title.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Exercises"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,54 +31,45 @@
 
     <TextView
         android:id="@+id/tvHistoryLabel"
+        style="@style/TextAppearance.App.Title.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Recent History"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/rvHistory" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHistory"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="150dp" 
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/btnStartWorkout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddExercise"
+        style="@style/Widget.App.Button.Outlined"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add"
+        android:text="Add Exercise"
+        app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btnViewProgress"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Progress"
-        app:layout_constraintBottom_toBottomOf="@+id/btnAddExercise"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnAddExercise" />
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStartWorkout"
+        style="@style/Widget.App.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="Start Workout"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddExercise"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/btnAddExercise" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,6 @@ import com.bis5.fitjourney.viewmodels.SharedViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModel;
 import com.bis5.fitjourney.viewmodels.WorkoutViewModelFactory;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.OnWorkoutListener {
 
@@ -48,38 +47,36 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
 
         AppDatabase database = AppDatabase.getDatabase(requireContext());
         WorkoutViewModelFactory viewModelFactory = new WorkoutViewModelFactory(database.workoutDao(), database.exerciseDao(), database.workoutLogDao(), database.setLogDao());
-
         workoutViewModel = new ViewModelProvider(requireActivity(), viewModelFactory).get(WorkoutViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         setupRecyclerView();
 
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        // THE NEW LAW: Command the King, then listen for his proclamations.
         sharedViewModel.getUserEmail().observe(getViewLifecycleOwner(), email -> {
             if (email != null && !email.isEmpty()) {
-                workoutViewModel.getWorkouts(email).observe(getViewLifecycleOwner(), workouts -> {
-                    workoutListAdapter.submitList(workouts);
-                });
+                workoutViewModel.loadUser(email);
             }
         });
 
-        binding.fabAddWorkout.setOnClickListener(v -> {
-            showCreateWorkoutDialog();
+        workoutViewModel.userWorkouts.observe(getViewLifecycleOwner(), workouts -> {
+            if(workouts != null) workoutListAdapter.submitList(workouts);
         });
+
+        binding.btnCreateWorkout.setOnClickListener(v -> showCreateWorkoutDialog());
     }
 
     private void showCreateWorkoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Create New Workout");
 
-        // Inflate the custom layout
         DialogCreateWorkoutBinding dialogBinding = DialogCreateWorkoutBinding.inflate(LayoutInflater.from(requireContext()));
         builder.setView(dialogBinding.getRoot());
 
-        // Setup chip interaction
         dialogBinding.cgWorkoutTypes.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId != View.NO_ID) {
                 Chip selectedChip = group.findViewById(checkedId);
-                dialogBinding.etWorkoutName.setText(selectedChip.getText());
+                if(selectedChip != null) dialogBinding.etWorkoutName.setText(selectedChip.getText());
             }
         });
 
@@ -92,7 +89,7 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
                 return;
             }
             if (userEmail == null || userEmail.isEmpty()) {
-                Toast.makeText(getContext(), "Error: User data not found.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: User data not found. Please restart the app.", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -165,13 +162,15 @@ public class WorkoutListFragment extends Fragment implements WorkoutListAdapter.
 
     @Override
     public void onItemClicked(Workout workout) {
-        NavDirections action = 
-            WorkoutListFragmentDirections.actionWorkoutListFragmentToWorkoutDetailFragment(workout.getId());
-        NavHostFragment.findNavController(this).navigate(action);
+        if(workout != null) {
+            NavDirections action = 
+                WorkoutListFragmentDirections.actionWorkoutListFragmentToWorkoutDetailFragment(workout.getId());
+            NavHostFragment.findNavController(this).navigate(action);
+        }
     }
 
     @Override
     public void onLongItemClicked(Workout workout) {
-        showEditDeleteDialog(workout);
+        if(workout != null) showEditDeleteDialog(workout);
     }
 }
